@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+</head>
+<body>
+    <h1>User List</h1>
+    <ul id="user-list"></ul>
+
+    <h2>Add New User</h2>
+    <form id="add-user-form">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="skills" placeholder="Skills (comma separated)" required>
+        <button type="submit">Add User</button>
+    </form>
+
+    <script>
+        const userListElement = document.getElementById('user-list');
+        const addUserForm = document.getElementById('add-user-form');
+
+        function fetchUsers() {
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    userListElement.innerHTML = '';
+                    users.forEach(user => {
+                        userListElement.innerHTML += `
+                            <li>
+                                ${user.name} - ${user.email} - ${user.skills.join(', ')}
+                                <a href="/user/${user.id}/edit">Edit</a> |
+                                <a href="/user/${user.id}/delete">Delete</a>
+                            </li>
+                        `;
+                    });
+                });
+        }
+
+        addUserForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(addUserForm);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                skills: formData.get('skills').split(',')
+            };
+
+            fetch('/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => {
+                fetchUsers();
+                addUserForm.reset();
+            });
+        });
+
+        fetchUsers();
+    </script>
+</body>
+</html>

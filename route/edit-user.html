@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+</head>
+<body>
+    <h1>Edit User</h1>
+    <form id="edit-user-form">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="skills" placeholder="Skills (comma separated)" required>
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <script>
+        const userId = window.location.pathname.split('/')[2];
+        const editUserForm = document.getElementById('edit-user-form');
+
+        fetch(`/api/user/${userId}`)
+            .then(response => response.json())
+            .then(user => {
+                editUserForm.name.value = user.name;
+                editUserForm.email.value = user.email;
+                editUserForm.skills.value = user.skills.join(', ');
+            });
+
+        editUserForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(editUserForm);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                skills: formData.get('skills').split(',')
+            };
+
+            fetch(`/api/user/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => {
+                // window.location.href = '/users';
+            });
+        });
+    </script>
+</body>
+</html>
