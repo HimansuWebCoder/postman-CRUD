@@ -28,25 +28,33 @@ app.get('/api/users', (req, res) => {
 
 // API route to handle user creation (for adding new users)
 app.post('/api/users', (req, res) => {
-  const newUser = {
-    id: users.length + 1,
-    name: req.body.name,
-    email: req.body.email,
-    skills: req.body.skills
-  };
-  users.push(newUser);
-  res.json({ message: 'User added successfully', user: newUser });
+  const { id, name, email, skills } = req.body;
+  users.push({id: users.length, name: name, email: email, skills: skills});
+  res.json(users);
 });
 
 // API route to handle user updates (for the edit page)
 app.put('/api/user/:id', (req, res) => {
   const userId = parseInt(req.params.id);
-  const updatedData = req.body;
+  const { name, email, skills } = req.body;
 
-  users = users.map(user => user.id === userId ? { ...user, ...updatedData } : user);
+  // Check if userId is valid
+  if (isNaN(userId)) {
+    return res.status(400).json({ message: 'Invalid user ID' });
+  }
 
-  res.json({ message: 'User updated successfully', userId });
+  // Find the user by ID and update their details
+  const userIndex = users.findIndex(user => user.id === userId);
+
+  if (userIndex !== -1) {
+    // Update the user data
+    users[userIndex] = { ...users[userIndex], name, email, skills };
+    res.json({ message: 'User updated successfully', user: users[userIndex] });
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
 });
+
 
 // API route to handle user deletion (for the delete page)
 app.delete('/api/user/:id', (req, res) => {

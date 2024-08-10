@@ -11,53 +11,52 @@
 
     <h2>Add New User</h2>
     <form id="add-user-form">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="skills" placeholder="Skills (comma separated)" required>
+        <input id="name" type="text" name="name" placeholder="Name" required>
+        <input id="email" type="email" name="email" placeholder="Email" required>
+        <input id="skills" type="text" name="skills" placeholder="Skills (comma separated)" required>
         <button type="submit">Add User</button>
+        <div class="data-container"></div>
     </form>
 
     <script>
-        const userListElement = document.getElementById('user-list');
-        const addUserForm = document.getElementById('add-user-form');
+        const name = document.querySelector("#name");
+        const email = document.querySelector("#email");
+        const skills = document.querySelector("#skills");
+        const dataContainer = document.querySelector(".data-container");
+        const submit = document.querySelector("button");
 
-        function fetchUsers() {
+        submit.addEventListener("click", () => {
+        fetch('/api/users', {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name: name.value, email: email.value, skills: skills.value})
+          })
+        })
+
+        
             fetch('/api/users')
-                .then(response => response.json())
-                .then(users => {
-                    userListElement.innerHTML = '';
-                    users.forEach(user => {
-                        userListElement.innerHTML += `
-                            <li>
-                                ${user.name} - ${user.email} - ${user.skills.join(', ')}
-                                <a href="/user/${user.id}/edit">Edit</a> |
-                                <a href="/user/${user.id}/delete">Delete</a>
-                            </li>
-                        `;
-                    });
-                });
-        }
+              .then(res => res.json())
+              .then(users => {
+                 dataContainer.innerHTML = '';
+                users.forEach(user => {
+                    const userData = document.createElement("p");
+                    dataContainer.appendChild(userData);
+                    userData.textContent = `${user.name} ${user.email} ${user.skills}`
 
-        addUserForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(addUserForm);
-            const data = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                skills: formData.get('skills').split(',')
-            };
+                    const edit_link = document.createElement("a");
+                    userData.appendChild(edit_link);
+                    edit_link.href = `/user/${user.id}/edit`;
+                    edit_link.textContent = "Edit";
 
-            fetch('/api/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).then(() => {
-                fetchUsers();
-                addUserForm.reset();
-            });
-        });
+                    const delete_link = document.createElement("a");
+                    userData.appendChild(delete_link);
+                    delete_link.href = `/user/${user.id}/delete`;
+                    delete_link.textContent = "Delete";
 
-        fetchUsers();
+                    console.log(user)
+                })
+              })
+
     </script>
 </body>
 </html>
