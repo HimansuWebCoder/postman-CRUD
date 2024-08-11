@@ -8,28 +8,22 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const usersRouter = require('./routes/users.router');
-// const deleteUserRouter = require('./routes/delete.router');
+
+const deleteUserRouter = require('./routes/delete.router');
+const editUserRouter = require('./routes/edit.router');
+const userListRouter = require('./routes/user-list.router');
 
 
-// Serve the user list page
 app.get('/users', (req, res) => {
   res.sendFile(__dirname + '/user-list.html');
 });
 
-// Serve the edit page for a specific user
-app.get('/user/:id/edit', (req, res) => {
-  res.sendFile(__dirname + '/edit-user.html');
-});
-
-// Serve the delete page for a specific user
-app.get('/user/:id/delete', (req, res) => {
-  res.sendFile(__dirname + '/delete-user.html');
-});
-
-
-
 app.use('/api', usersRouter)
-// app.use("/delete-user", deleteUserRouter)
+
+// Serve HTML files
+app.use("/", userListRouter)
+app.use("/user", deleteUserRouter)
+app.use("/user", editUserRouter)
 
 // Start the server
 app.listen(3000, () => {
