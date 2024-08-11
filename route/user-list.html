@@ -32,12 +32,11 @@
             body: JSON.stringify({name: name.value, email: email.value, skills: skills.value})
           })
         })
-
-        
+      
             fetch('/api/users')
               .then(res => res.json())
               .then(users => {
-                 dataContainer.innerHTML = '';
+
                 users.forEach(user => {
                     const userData = document.createElement("p");
                     dataContainer.appendChild(userData);
