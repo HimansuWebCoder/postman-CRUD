@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>File Upload</title>
+</head>
+<body>
+    <div></div>
+    <script>
+         const div = document.querySelector("div");
+
+        fetch("http://localhost:3000")
+        .then(res => res.json())
+        .then(x => {
+            x.forEach(y => {
+                console.log(y)
+               const img = document.createElement("img");
+               div.appendChild(img);
+               img.src = `http://localhost:3000${y.image}`
+               img.alt = "image not found";
+               img.style.width = "300px",
+               img.style.height = "300px"
+            })
+        })
+    </script>
+</body>
+</html>
