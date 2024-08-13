@@ -52,15 +52,15 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 
 const app = express();
 
 // Ensure the uploads directory exists
 const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir);
+// }
 
 // Set up storage configuration for multer
 const storage = multer.diskStorage({
@@ -85,11 +85,12 @@ app.post('/profile', upload.single('avatar'), (req, res) => {
   console.log('Uploaded file:', req.file);
   
   // Send a response
-  res.send(`
-    <h1>File Upload Successful</h1>
-    <p>Uploaded file: ${req.file.originalname}</p>
-    <img src="/uploads/${req.file.originalname}" alt="Uploaded Image" style="max-width: 500px;">
-  `);
+  // res.send(`
+  //   <h1>File Upload Successful</h1>
+  //   <p>Uploaded file: ${req.file.originalname}</p>
+  //   <img src="/uploads/${req.file.originalname}" alt="Uploaded Image" style="max-width: 500px;">
+  // `);
+  // res.sendFile(path.join(__dirname, 'view.html'));
 });
 
 // Serve static files (uploaded images)

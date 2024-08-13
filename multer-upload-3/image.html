@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>File Upload</title>
+    <title>View Photos</title>
 </head>
 <body>
     <div></div>
@@ -13,16 +13,24 @@
         fetch("http://localhost:3000")
         .then(res => res.json())
         .then(x => {
+            console.log(x)
             x.forEach(y => {
                 console.log(y)
                const img = document.createElement("img");
                div.appendChild(img);
                img.src = `http://localhost:3000${y.image}`
                img.alt = "image not found";
-               img.style.width = "300px",
-               img.style.height = "300px"
+               img.style.width = "300px";
+               img.style.height = "300px";
             })
         })
+
+
+
+        // checkout http://localhost:3000/uploads/Screenshot%20from%202024-08-13%2015-49-21.png
+
+        // checkout this from database
+        // http://localhost:3000/uploads/Screenshot%20from%202024-08-13%2015-51-04.png
     </script>
 </body>
 </html>
