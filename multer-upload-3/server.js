@@ -72,9 +72,11 @@ app.post('/submit-file', upload.single('avatar'), function (req, res, next) {
   }
    // usersImg.push(images);
 
-  db('images')
-  .returning('*')
-  .insert(images)
+  // db('images')
+  // .returning('*')
+  // .insert(images)
+
+
 
   // db('images')
   // .returning('*')
